@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>People Registry</title>
+<style>
+  body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+  h1 { text-align: center; color: #333; }
+  input, button { padding: 10px; margin: 5px 0; width: 100%; max-width: 300px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+  th { background: #333; color: white; }
+  tr:nth-child(even) { background: #eee; }
+  .no-result { color: red; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<h1>People Registry Search</h1>
+
+<input type="text" id="nameInput" placeholder="নাম লিখুন">
+<input type="date" id="dobInput">
+<button onclick="searchData()">Search</button>
+
+<div id="result"></div>
+
+<script>
+let people = [];
+
+// 🔹 Load data.json
+fetch('data.json')
+  .then(response => response.json())
+  .then(data => { people = data; })
+  .catch(err => console.log("Error loading JSON:", err));
+
+function searchData() {
+  const name = document.getElementById('nameInput').value.trim().toLowerCase();
+  const dob = document.getElementById('dobInput').value;
+
+  const results = people.filter(p => 
+    p.full_name.toLowerCase() === name && p.birth_date === dob
+  );
+
+  const resultDiv = document.getElementById('result');
+  if(results.length === 0){
+    resultDiv.innerHTML = '<p class="no-result">কোন তথ্য পাওয়া যায়নি</p>';
+    return;
+  }
+
+  let table = '<table><tr><th>নাম</th><th>জন্ম তারিখ</th><th>পিতার নাম</th><th>মাতার নাম</th><th>জেলা</th></tr>';
+  results.forEach(p => {
+    table += `<tr>
+      <td>${p.full_name}</td>
+      <td>${p.birth_date}</td>
+      <td>${p.father_name}</td>
+      <td>${p.mother_name}</td>
+      <td>${p.district}</td>
+    </tr>`;
+  });
+  table += '</table>';
+  resultDiv.innerHTML = table;
+}
+</script>
+
+</body>
+</html>
