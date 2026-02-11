@@ -1,138 +1,150 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ব্যক্তিগত তথ্য অনুসন্ধান</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ব্যক্তিগত তথ্য অনুসন্ধান</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        } 
 
-        .search-card {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            width: 350px;
-        }
+        .search-card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        } 
 
-        h1 {
-            text-align: center;
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 25px;
-        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 25px;
+        } 
 
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        } 
 
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        } 
 
-        .search-btn {
-            width: 100%;
-            background-color: #3b82f6;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        .search-btn {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        } 
 
-        /* রেজাল্ট দেখানোর স্টাইল */
-        #result-box {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none; /* শুরুতে লুকানো থাকবে */
-            text-align: left;
-            width: 350px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
+        #result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            display: none; 
+            text-align: left;
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        } 
 
-        .success { background-color: #d1fae5; border: 1px solid #10b981; color: #065f46; }
-        .error { background-color: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
-    </style>
+        .success { background-color: #ffffff; border-left: 6px solid #10b981; box-shadow: 0 4px 15px rgba(0,0,0,0.1); color: #333; }
+        .error { background-color: #fee2e2; border: 1px solid #ef4444; color: #991b1b; text-align: center; }
+        
+        .info-item { margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+        .info-label { font-weight: bold; color: #555; }
+        .sl-badge { background: #10b981; color: white; padding: 2px 8px; border-radius: 4px; font-size: 12px; float: right; }
+    </style>
 </head>
-<body>
+<body> 
 
-    <div class="search-card">
-        <h1>তথ্য খুঁজুন</h1>
-        
-        <label>নাম:</label>
-        <input type="text" id="userName" placeholder="নাম লিখুন">
+    <div class="search-card">
+        <h1>তথ্য খুঁজুন</h1>
+        
+        <label>নাম (বাংলায়):</label>
+        <input type="text" id="userName" placeholder="উদা: মো: লাল মিয়া"> 
 
-        <label>জন্ম তারিখ:</label>
-        <input type="date" id="userDOB">
+        <label>জন্ম তারিখ:</label>
+        <input type="date" id="userDOB"> 
 
-        <button class="search-btn" onclick="searchPerson()">সার্চ করুন</button>
-    </div>
+        <button class="search-btn" onclick="searchPerson()">সার্চ করুন</button>
+    </div> 
 
-    <div id="result-box"></div>
+    <div id="result-box"></div> 
 
-    <script>
-        // এখানে আমাদের ডাটাবেজ (নমুনা হিসেবে কিছু তথ্য দেওয়া হলো)
-        const peopleData = [ 
-  {"sl_no": "0001", "name": "মো: লাল মিয়া", "voter_no": "6106300399626", "father_name": "আ: মোতালেব", "mother_name": "জোবেদা", "occupation": "তথ্য নেই", "dob": "04-10-1982", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0002", "name": "জুলহাস", "voter_no": "610630826524", "father_name": "দুলাল উদ্দিন", "mother_name": "আমেনা", "occupation": "তথ্য নেই", "dob": "24-08-1983", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0003", "name": "মো: তপন", "voter_no": "610630964000", "father_name": "মো: মাইন উদ্দিন", "mother_name": "হেনা বেগম", "occupation": "তথ্য নেই", "dob": "22-07-1975", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0004", "name": "মো: রহিত", "voter_no": "610630964003", "father_name": "মো: সিদ্দিক", "mother_name": "ছাহের খাতুন", "occupation": "তথ্য নেই", "dob": "18-11-1989", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0005", "name": "রফিকুর ইসলাম", "voter_no": "610630964004", "father_name": "মাহতাব আলী", "mother_name": "ফাতেমা খাতুন", "occupation": "তথ্য নেই", "dob": "28-07-1969", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0006", "name": "মো: শহিদুল ইসলাম", "voter_no": "610630964050", "father_name": "বিল্লাল হোসেন", "mother_name": "হাজেরা খাতুন", "occupation": "তথ্য নেই", "dob": "07-05-1982", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0007", "name": "মো: আজিম উদ্দিন", "voter_no": "610630965012", "father_name": "আবুল হোসেন", "mother_name": "রেজিয়া খাতুন", "occupation": "তথ্য নেই", "dob": "13-08-1975", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0008", "name": "সুলতান", "voter_no": "610630965020", "father_name": "জামাল উদ্দিন", "mother_name": "আমেনা", "occupation": "তথ্য নেই", "dob": "17-07-1962", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0009", "name": "আবু বকর সিদ্দিক", "voter_no": "610630965021", "father_name": "জামাল উদ্দিন", "mother_name": "আমেনা", "occupation": "তথ্য নেই", "dob": "22-03-1967", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0010", "name": "হারুন অর রশিদ", "voter_no": "610630965024", "father_name": "আ: হাই (বুলু)", "mother_name": "রোমেছা খাতুন", "occupation": "তথ্য নেই", "dob": "22-10-1979", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0011", "name": "আ: হাই (বুলু)", "voter_no": "610630965025", "father_name": "কাইমুদ্দিন", "mother_name": "তরিমন নেছা", "occupation": "তথ্য নেই", "dob": "17-07-1949", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0012", "name": "মো: ইউনুছ আলী", "voter_no": "610630965026", "father_name": "মো: মকবুল হোসেন", "mother_name": "খোদেজা বেগম", "occupation": "তথ্য নেই", "dob": "22-08-1976", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0013", "name": "আ: রহমান", "voter_no": "610630965027", "father_name": "জামাল উদ্দিন", "mother_name": "আমেনা খাতুন", "occupation": "তথ্য নেই", "dob": "12-08-1970", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0014", "name": "আ: রাজ্জাক", "voter_no": "610630965031", "father_name": "সামাদ সরকার", "mother_name": "তহরুন নেছা", "occupation": "তথ্য নেই", "dob": "12-03-1965", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0015", "name": "দুলাল মিয়া", "voter_no": "610630965032", "father_name": "হযরত আলী", "mother_name": "ফালানী", "occupation": "তথ্য নেই", "dob": "28-07-1975", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0016", "name": "হযরত আলী", "voter_no": "610630965035", "father_name": "মফেজ মন্ডল", "mother_name": "জাহানারা", "occupation": "তথ্য নেই", "dob": "03-05-1929", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0017", "name": "হোসেন আলী", "voter_no": "610630965037", "father_name": "আ: মালেক", "mother_name": "জামেলা", "occupation": "তথ্য নেই", "dob": "12-03-1959", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0018", "name": "মো: খলিল", "voter_no": "610630965041", "father_name": "হোসেন আলী", "mother_name": "বিবি হাওয়া", "occupation": "তথ্য নেই", "dob": "09-11-1985", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0019", "name": "আ: রহমান", "voter_no": "610630965048", "father_name": "নূরুল ইসলাম", "mother_name": "হাজেরা খাতুন", "occupation": "তথ্য নেই", "dob": "21-08-1959", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
-  {"sl_no": "0020", "name": "আ: রহিম", "voter_no": "610630965050", "father_name": "বাবু জান হাজী", "mother_name": "রাবেয়া খাতুন", "occupation": "তথ্য নেই", "dob": "23-08-1970", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"}
-]
+    <script>
+        const peopleData = [ 
+            {"sl_no": "0001", "name": "মো: লাল মিয়া", "voter_no": "6106300399626", "father_name": "আ: মোতালেব", "mother_name": "জোবেদা", "occupation": "তথ্য নেই", "dob": "04-10-1982", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0002", "name": "জুলহাস", "voter_no": "610630826524", "father_name": "দুলাল উদ্দিন", "mother_name": "আমেনা", "occupation": "তথ্য নেই", "dob": "24-08-1983", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0003", "name": "মো: তপন", "voter_no": "610630964000", "father_name": "মো: মাইন উদ্দিন", "mother_name": "হেনা বেগম", "occupation": "তথ্য নেই", "dob": "22-07-1975", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0004", "name": "মো: রহিত", "voter_no": "610630964003", "father_name": "মো: সিদ্দিক", "mother_name": "ছাহের খাতুন", "occupation": "তথ্য নেই", "dob": "18-11-1989", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0005", "name": "রফিকুর ইসলাম", "voter_no": "610630964004", "father_name": "মাহতাব আলী", "mother_name": "ফাতেমা খাতুন", "occupation": "তথ্য নেই", "dob": "28-07-1969", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0006", "name": "মো: শহিদুল ইসলাম", "voter_no": "610630964050", "father_name": "বিল্লাল হোসেন", "mother_name": "হাজেরা খাতুন", "occupation": "তথ্য নেই", "dob": "07-05-1982", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0007", "name": "মো: আজিম উদ্দিন", "voter_no": "610630965012", "father_name": "আবুল হোসেন", "mother_name": "রেজিয়া খাতুন", "occupation": "তথ্য নেই", "dob": "13-08-1975", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0008", "name": "সুলতান", "voter_no": "610630965020", "father_name": "জামাল উদ্দিন", "mother_name": "আমেনা", "occupation": "তথ্য নেই", "dob": "17-07-1962", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0009", "name": "আবু বকর সিদ্দিক", "voter_no": "610630965021", "father_name": "জামাল উদ্দিন", "mother_name": "আমেনা", "occupation": "তথ্য নেই", "dob": "22-03-1967", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"},
+            {"sl_no": "0010", "name": "হারুন অর রশিদ", "voter_no": "610630965024", "father_name": "আ: হাই (বুলু)", "mother_name": "রোমেছা খাতুন", "occupation": "তথ্য নেই", "dob": "22-10-1979", "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"}
+        ]; 
 
-        function searchPerson() {
-            const nameInput = document.getElementById('userName').value.trim();
-            const dobInput = document.getElementById('userDOB').value;
-            const resultBox = document.getElementById('result-box');
+        function searchPerson() {
+            const nameInput = document.getElementById('userName').value.trim();
+            const dobInput = document.getElementById('userDOB').value;
+            const resultBox = document.getElementById('result-box'); 
 
-            // ডাটা চেক করা
-            const person = peopleData.find(p => p.name === nameInput && p.dob === dobInput);
+            if(!nameInput || !dobInput) {
+                alert("দয়া করে নাম এবং জন্ম তারিখ দিন");
+                return;
+            }
 
-            resultBox.style.display = "block"; // বক্সটি দেখাও
+            // তারিখ ফরম্যাট ঠিক করা (YYYY-MM-DD থেকে DD-MM-YYYY)
+            const [y, m, d] = dobInput.split('-');
+            const formattedDate = `${d}-${m}-${y}`;
 
-            if (person) {
-                resultBox.className = "success";
-                resultBox.innerHTML = `<strong>তথ্য পাওয়া গেছে!</strong><br>${person.info}`;
-            } else {
-                resultBox.className = "error";
-                resultBox.innerHTML = "দুঃখিত! এই নামে বা জন্ম তারিখে কোনো তথ্য পাওয়া যায়নি।";
-            }
-        }
-    </script>
+            const person = peopleData.find(p => p.name === nameInput && p.dob === formattedDate); 
 
+            resultBox.style.display = "block";
+
+            if (person) {
+                resultBox.className = "success";
+                resultBox.innerHTML = `
+                    <span class="sl-badge">Sl: ${person.sl_no}</span>
+                    <h3 style="color:#10b981; margin-top:0;">তথ্য পাওয়া গেছে!</h3>
+                    <div class="info-item"><span class="info-label">নাম:</span> ${person.name}</div>
+                    <div class="info-item"><span class="info-label">পিতার নাম:</span> ${person.father_name}</div>
+                    <div class="info-item"><span class="info-label">মাতার নাম:</span> ${person.mother_name}</div>
+                    <div class="info-item"><span class="info-label">ভোটার নং:</span> ${person.voter_no}</div>
+                    <div class="info-item"><span class="info-label">জন্ম তারিখ:</span> ${person.dob}</div>
+                    <div class="info-item"><span class="info-label">ঠিকানা:</span> ${person.address}</div>
+                    <div class="info-item"><span class="info-label">পেশা:</span> ${person.occupation}</div>
+                `;
+            } else {
+                resultBox.className = "error";
+                resultBox.innerHTML = "<strong>দুঃখিত!</strong> কোনো তথ্য পাওয়া যায়নি। নামের বানান বা তারিখ চেক করুন।";
+            }
+        }
+    </script> 
 </body>
 </html>
