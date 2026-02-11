@@ -9,66 +9,65 @@
       padding: 0;
       box-sizing: border-box;
       font-family: 'Noto Serif Bengali', serif;
-    }body {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #ffffff;
-}
-
-.container {
-  text-align: center;
-}
-
-h1 {
-  font-size: 56px;
-  font-weight: 700;
-  margin-bottom: 40px;
-  color: #222;
-}
-
-.search-box {
-  width: 500px;
-  max-width: 90%;
-  display: flex;
-  align-items: center;
-  border: 1px solid #dcdcdc;
-  border-radius: 30px;
-  padding: 12px 20px;
-}
-
-.search-box input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 18px;
-}
-
-.search-box button {
-  border: none;
-  background: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.search-box:hover {
-  box-shadow: 0 1px 6px rgba(32,33,36,.28);
-  border-color: rgba(223,225,229,0);
-}
-
+    }
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ffffff;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      font-size: 56px;
+      font-weight: 700;
+      margin-bottom: 40px;
+      color: #222;
+    }
+    .search-box {
+      width: 500px;
+      max-width: 90%;
+      display: flex;
+      align-items: center;
+      border: 1px solid #dcdcdc;
+      border-radius: 30px;
+      padding: 12px 20px;
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 18px;
+    }
+    .search-box button {
+      border: none;
+      background: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .search-box:hover {
+      box-shadow: 0 1px 6px rgba(32,33,36,.28);
+      border-color: rgba(223,225,229,0);
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #111;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>তথ্য খুঁজুন</h1>
     <div class="search-box">
-      <input type="text" placeholder="এখানে লিখুন..." />
-      <button>🔍</button>
+      <input id="searchInput" type="text" placeholder="নাম বা ভোটার নম্বর লিখুন" />
+      <button id="searchBtn" type="button">🔍</button>
     </div>
-  </div>
-  <script>
-    // উদাহরণ ডাটা (তুমি এখানে ১৪৪৩ জনের ডাটা বসাবে)
+    <div id="result"></div>
+  </div>  <script>
+    // ডেমো ডাটা (এখানে তোমার ১৪৪৩ জনের ডাটা বসাবে)
     const people = [
   {
     "sl_no": "0001",
@@ -991,38 +990,40 @@ h1 {
     "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"
   }
 ]
-      
-    ;const input = document.querySelector('input');
 
-input.addEventListener('input', function () {
-  const value = this.value.trim();
-  let resultBox = document.getElementById('result');
+;
 
-  if (!resultBox) {
-    resultBox = document.createElement('div');
-    resultBox.id = 'result';
-    resultBox.style.marginTop = '20px';
-    document.querySelector('.container').appendChild(resultBox);
-  }
+    const input = document.getElementById('searchInput');
+    const btn = document.getElementById('searchBtn');
+    const result = document.getElementById('result');
 
-  if (value === '') {
-    resultBox.innerHTML = '';
-    return;
-  }
+    function doSearch() {
+      const value = input.value.trim();
+      if (value === '') {
+        result.innerHTML = '';
+        return;
+      }
 
-  const found = people.filter(p =>
-    p.name.includes(value) || p.voter.includes(value)
-  );
+      const found = people.filter(p =>
+        p.name.includes(value) || p.voter.includes(value)
+      );
 
-  if (found.length === 0) {
-    resultBox.innerHTML = '<p>কোন তথ্য পাওয়া যায়নি</p>';
-  } else {
-    resultBox.innerHTML = found.map(p => `
-      <p><b>নাম:</b> ${p.name}<br><b>ভোটার:</b> ${p.voter}<br><b>পিতা:</b> ${p.father}</p>
-    `).join('');
-  }
-});
+      if (found.length === 0) {
+        result.innerHTML = '<p>কোন তথ্য পাওয়া যায়নি</p>';
+      } else {
+        result.innerHTML = found.map(p => `
+          <p>
+            <b>নাম:</b> ${p.name}<br>
+            <b>ভোটার:</b> ${p.voter}<br>
+            <b>পিতা:</b> ${p.father}
+          </p>
+        `).join('');
+      }
+    }
 
-  </script>
-</body>
+    btn.addEventListener('click', doSearch);
+    input.addEventListener('keyup', function (e) {
+      if (e.key === 'Enter') doSearch();
+    });
+  </script></body>
 </html>
