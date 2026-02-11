@@ -1,74 +1,97 @@
-<!DOCTYPE html><html lang="bn">
+<!DOCTYPE html>
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Search Page</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Noto Serif Bengali', serif;
-    }
-    body {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #ffffff;
-    }
-    .container {
-      text-align: center;
-    }
-    h1 {
-      font-size: 56px;
-      font-weight: 700;
-      margin-bottom: 40px;
-      color: #222;
-    }
-    .search-box {
-      width: 500px;
-      max-width: 90%;
-      display: flex;
-      align-items: center;
-      border: 1px solid #dcdcdc;
-      border-radius: 30px;
-      padding: 12px 20px;
-    }
-    .search-box input {
-      border: none;
-      outline: none;
-      width: 100%;
-      font-size: 18px;
-    }
-    .search-box button {
-      border: none;
-      background: none;
-      font-size: 18px;
-      cursor: pointer;
-    }
-    .search-box:hover {
-      box-shadow: 0 1px 6px rgba(32,33,36,.28);
-      border-color: rgba(223,225,229,0);
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #111;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ব্যক্তিগত তথ্য অনুসন্ধান</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .search-card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .search-btn {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* রেজাল্ট দেখানোর স্টাইল */
+        #result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none; /* শুরুতে লুকানো থাকবে */
+            text-align: left;
+            width: 350px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .success { background-color: #d1fae5; border: 1px solid #10b981; color: #065f46; }
+        .error { background-color: #fee2e2; border: 1px solid #ef4444; color: #991b1b; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <h1>তথ্য খুঁজুন</h1>
-    <div class="search-box">
-      <input id="searchInput" type="text" placeholder="নাম বা ভোটার নম্বর লিখুন" />
-      <button id="searchBtn" type="button">🔍</button>
-    </div>
-    <div id="result"></div>
-  </div>  <script>
-    // ডেমো ডাটা (এখানে তোমার ১৪৪৩ জনের ডাটা বসাবে)
-    const people = [
+
+    <div class="search-card">
+        <h1>তথ্য খুঁজুন</h1>
+        
+        <label>নাম:</label>
+        <input type="text" id="userName" placeholder="নাম লিখুন">
+
+        <label>জন্ম তারিখ:</label>
+        <input type="date" id="userDOB">
+
+        <button class="search-btn" onclick="searchPerson()">সার্চ করুন</button>
+    </div>
+
+    <div id="result-box"></div>
+
+    <script>
+        // এখানে আমাদের ডাটাবেজ (নমুনা হিসেবে কিছু তথ্য দেওয়া হলো)
+        const peopleData = [
   {
     "sl_no": "0001",
     "name": "মো: লাল মিয়া",
@@ -987,43 +1010,29 @@
     "mother_name": "মিনারা খাতুন",
     "occupation": "তথ্য নেই",
     "dob": "1986-06-02",
-    "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিংহ"
-  }
-]
+    "address": "শ্রীপুর মাইজ হাটি, মুক্তাগাছা, ময়মনসিহহ"
+  }, 
+  ];
 
-;
+        function searchPerson() {
+            const nameInput = document.getElementById('userName').value.trim();
+            const dobInput = document.getElementById('userDOB').value;
+            const resultBox = document.getElementById('result-box');
 
-    const input = document.getElementById('searchInput');
-    const btn = document.getElementById('searchBtn');
-    const result = document.getElementById('result');
+            // ডাটা চেক করা
+            const person = peopleData.find(p => p.name === nameInput && p.dob === dobInput);
 
-    function doSearch() {
-      const value = input.value.trim();
-      if (value === '') {
-        result.innerHTML = '';
-        return;
-      }
+            resultBox.style.display = "block"; // বক্সটি দেখাও
 
-      const found = people.filter(p =>
-        p.name.includes(value) || p.voter.includes(value)
-      );
+            if (person) {
+                resultBox.className = "success";
+                resultBox.innerHTML = `<strong>তথ্য পাওয়া গেছে!</strong><br>${person.info}`;
+            } else {
+                resultBox.className = "error";
+                resultBox.innerHTML = "দুঃখিত! এই নামে বা জন্ম তারিখে কোনো তথ্য পাওয়া যায়নি।";
+            }
+        }
+    </script>
 
-      if (found.length === 0) {
-        result.innerHTML = '<p>কোন তথ্য পাওয়া যায়নি</p>';
-      } else {
-        result.innerHTML = found.map(p => `
-          <p>
-            <b>নাম:</b> ${p.name}<br>
-            <b>ভোটার:</b> ${p.voter}<br>
-            <b>পিতা:</b> ${p.father}
-          </p>
-        `).join('');
-      }
-    }
-
-    btn.addEventListener('click', doSearch);
-    input.addEventListener('keyup', function (e) {
-      if (e.key === 'Enter') doSearch();
-    });
-  </script></body>
-</html>
+</body>
+</html> 
