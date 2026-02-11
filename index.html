@@ -27,7 +27,7 @@
 <div id="result"></div>
 
 <script>
-// 🔹 Example Data (তুমি পরে JSON file থেকে load করতে পারো)
+// 🔹 Example Data (পরবর্তীতে JSON file থেকে load করা যাবে)
 const people = [
   { full_name: "মো: লাল মিয়া", birth_date: "1982-10-04", father_name: "আ: মোতালেব", mother_name: "জোবেদা", district: "ময়মনসিংহ" },
   { full_name: "জুলহাস", birth_date: "1983-08-24", father_name: "দুলাল উদ্দিন", mother_name: "আমেনা", district: "ময়মনসিংহ" },
@@ -39,23 +39,24 @@ function searchData() {
   const name = document.getElementById('nameInput').value.trim().toLowerCase();
   const dob = document.getElementById('dobInput').value;
 
-  const results = people.filter(p => 
-    p.full_name.toLowerCase() === name &&
-    p.birth_date === dob
-  );
-
   const resultDiv = document.getElementById('result');
+
+  // মূল ক্রমিক নম্বর ধরে Filter
+  const results = people
+    .map((p, idx) => ({ ...p, originalIndex: idx + 1 })) // মূল তালিকার ক্রমিক নং
+    .filter(p => p.full_name.toLowerCase() === name && p.birth_date === dob);
+
   if(results.length === 0){
     resultDiv.innerHTML = '<p class="no-result">কোন তথ্য পাওয়া যায়নি</p>';
     return;
   }
 
-  // Table with Serial Number
+  // Table তৈরি
   let table = '<table><tr><th>ক্রমিক নং</th><th>নাম</th><th>জন্ম তারিখ</th><th>পিতার নাম</th><th>মাতার নাম</th><th>জেলা</th></tr>';
   
-  results.forEach((p, index) => {
+  results.forEach(p => {
     table += `<tr>
-      <td>${index + 1}</td>
+      <td>${p.originalIndex}</td>
       <td>${p.full_name}</td>
       <td>${p.birth_date}</td>
       <td>${p.father_name}</td>
