@@ -3,70 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>People Registry Search</title>
+<title>Voter Search</title>
 <style>
-  body { font-family: Arial; padding: 20px; background: #f5f5f5; }
-  h1 { text-align: center; color: #333; }
-  input, button { padding: 10px; margin: 5px 0; width: 100%; max-width: 300px; }
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-  th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-  th { background: #333; color: white; }
-  tr:nth-child(even) { background: #eee; }
-  .no-result { color: red; margin-top: 20px; }
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  input { padding: 5px; width: 200px; margin-right: 10px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  th { background-color: #f0f0f0; }
 </style>
 </head>
 <body>
 
-<h1>People Registry Search</h1>
-
-<!-- Search Inputs -->
+<h2>Voter Information Search</h2>
 <input type="text" id="nameInput" placeholder="নাম লিখুন">
-<input type="date" id="dobInput">
+<input type="text" id="dobInput" placeholder="জন্ম তারিখ লিখুন (DD/MM/YYYY)">
 <button onclick="searchData()">Search</button>
 
-<div id="result"></div>
+<table id="resultsTable">
+  <thead>
+    <tr>
+      <th>ক্রমিক</th>
+      <th>নাম</th>
+      <th>ভোটার নং</th>
+      <th>পিতা</th>
+      <th>মাতা</th>
+      <th>পেশা</th>
+      <th>জন্ম তারিখ</th>
+      <th>ঠিকানা</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
 
 <script>
-// 🔹 Example Data (পরবর্তীতে JSON file থেকে load করা যাবে)
-const people = [
-  { full_name: "মো: লাল মিয়া", birth_date: "1982-10-04", father_name: "আ: মোতালেব", mother_name: "জোবেদা", district: "ময়মনসিংহ" },
-  { full_name: "জুলহাস", birth_date: "1983-08-24", father_name: "দুলাল উদ্দিন", mother_name: "আমেনা", district: "ময়মনসিংহ" },
-  { full_name: "মো: তপন", birth_date: "1975-07-22", father_name: "মো: মাইন উদ্দিন", mother_name: "হেনা বেগম", district: "ময়মনসিংহ" },
-  { full_name: "মো: রহিত", birth_date: "1989-11-18", father_name: "মো: সিদ্দিক", mother_name: "ছাহের খাতুন", district: "ময়মনসিংহ" }
-];
+let data = [];
+
+// Load data.json from GitHub
+fetch('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/data.json')
+  .then(response => response.json())
+  .then(json => data = json)
+  .catch(err => console.error('Error loading JSON:', err));
 
 function searchData() {
-  const name = document.getElementById('nameInput').value.trim().toLowerCase();
-  const dob = document.getElementById('dobInput').value;
+  const nameQuery = document.getElementById('nameInput').value.toLowerCase();
+  const dobQuery = document.getElementById('dobInput').value;
 
-  const resultDiv = document.getElementById('result');
-
-  // মূল ক্রমিক নম্বর ধরে Filter
-  const results = people
-    .map((p, idx) => ({ ...p, originalIndex: idx + 1 })) // মূল তালিকার ক্রমিক নং
-    .filter(p => p.full_name.toLowerCase() === name && p.birth_date === dob);
-
-  if(results.length === 0){
-    resultDiv.innerHTML = '<p class="no-result">কোন তথ্য পাওয়া যায়নি</p>';
-    return;
-  }
-
-  // Table তৈরি
-  let table = '<table><tr><th>ক্রমিক নং</th><th>নাম</th><th>জন্ম তারিখ</th><th>পিতার নাম</th><th>মাতার নাম</th><th>জেলা</th></tr>';
-  
-  results.forEach(p => {
-    table += `<tr>
-      <td>${p.originalIndex}</td>
-      <td>${p.full_name}</td>
-      <td>${p.birth_date}</td>
-      <td>${p.father_name}</td>
-      <td>${p.mother_name}</td>
-      <td>${p.district}</td>
-    </tr>`;
+  const results = data.filter(item => {
+    const nameMatch = item.name.toLowerCase().includes(nameQuery);
+    const dobMatch = dobQuery ? item.dob === dobQuery : true;
+    return nameMatch && dobMatch;
   });
 
-  table += '</table>';
-  resultDiv.innerHTML = table;
+  const tbody = document.querySelector('#resultsTable tbody');
+  tbody.innerHTML = ''; // Clear previous results
+
+  results.forEach((item, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${item.serial}</td>
+      <td>${item.name}</td>
+      <td>${item.voter_id}</td>
+      <td>${item.father}</td>
+      <td>${item.mother}</td>
+      <td>${item.profession}</td>
+      <td>${item.dob}</td>
+      <td>${item.address}</td>
+    `;
+    tbody.appendChild(row);
+  });
 }
 </script>
 
