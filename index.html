@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>People Registry Search</title>
 <style>
-  body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+  body { font-family: Arial; padding: 20px; background: #f5f5f5; }
   h1 { text-align: center; color: #333; }
   input, button { padding: 10px; margin: 5px 0; width: 100%; max-width: 300px; }
   table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -27,7 +27,7 @@
 <div id="result"></div>
 
 <script>
-// 🔹 Data Example (পরে JSON file থেকে load করা যাবে)
+// 🔹 Example Data (তুমি পরে JSON file থেকে load করতে পারো)
 const people = [
   { full_name: "মো: লাল মিয়া", birth_date: "1982-10-04", father_name: "আ: মোতালেব", mother_name: "জোবেদা", district: "ময়মনসিংহ" },
   { full_name: "জুলহাস", birth_date: "1983-08-24", father_name: "দুলাল উদ্দিন", mother_name: "আমেনা", district: "ময়মনসিংহ" },
@@ -50,9 +50,12 @@ function searchData() {
     return;
   }
 
-  let table = '<table><tr><th>নাম</th><th>জন্ম তারিখ</th><th>পিতার নাম</th><th>মাতার নাম</th><th>জেলা</th></tr>';
-  results.forEach(p => {
+  // Table with Serial Number
+  let table = '<table><tr><th>ক্রমিক নং</th><th>নাম</th><th>জন্ম তারিখ</th><th>পিতার নাম</th><th>মাতার নাম</th><th>জেলা</th></tr>';
+  
+  results.forEach((p, index) => {
     table += `<tr>
+      <td>${index + 1}</td>
       <td>${p.full_name}</td>
       <td>${p.birth_date}</td>
       <td>${p.father_name}</td>
@@ -60,6 +63,7 @@ function searchData() {
       <td>${p.district}</td>
     </tr>`;
   });
+
   table += '</table>';
   resultDiv.innerHTML = table;
 }
