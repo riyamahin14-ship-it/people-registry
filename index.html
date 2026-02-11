@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>তথ্য খুঁজুন</title>
+    <style>
+        /* ফন্ট ও বডি সেটআপ */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f7fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* মূল কার্ড ডিজাইন */
+        .search-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+        }
+
+        /* টাইটেল */
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        /* ইনপুট গ্রুপ */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            color: #555;
+        }
+
+        /* সার্চ বাটন */
+        .search-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .search-btn:hover {
+            background-color: #357ae8;
+        }
+
+        /* রেজাল্ট বক্স */
+        #result-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <h2>তথ্য খুঁজুন</h2>
+        
+        <div class="input-group">
+            <label for="userName">নাম:</label>
+            <input type="text" id="userName" placeholder="আপনার নাম লিখুন">
+        </div>
+
+        <div class="input-group">
+            <label for="userDOB">জন্ম তারিখ:</label>
+            <input type="date" id="userDOB">
+        </div>
+
+        <button type="button" class="search-btn" onclick="searchInfo()">সার্চ করুন</button>
+
+        <div id="result-box"></div>
+    </div>
+
+    <script>
+        async function searchInfo() {
+            const nameInput = document.getElementById('userName').value.trim();
+            const dobInput = document.getElementById('userDOB').value;
+            const resultBox = document.getElementById('result-box');
+
+            if (nameInput === "" || dobInput === "") {
+                alert("দয়া করে নাম এবং জন্ম তারিখ সঠিক ভাবে দিন।");
+                return;
+            }
+
+            try {
+                // আপনার GitHub রিপোজিটরির data.json ফাইল থেকে ডাটা আনবে
+                const response = await fetch('data.json');
+                if (!response.ok) throw new Error('ডাটা পাওয়া যায়নি');
+                
+                const database = await response.json();
+
+                // তথ্য খোঁজা হচ্ছে
+                const found = database.find(user => user.name === nameInput && user.dob === dobInput);
+
+                resultBox.style.display = "block";
+                if (found) {
+                    resultBox.innerHTML = `<strong>ফলাফল:</strong><br>${found.info}`;
+                    resultBox.style.color = "#155724";
+                    resultBox.style.backgroundColor = "#d4edda";
+                    resultBox.style.border = "1px solid #c3e6cb";
+                } else {
+                    resultBox.innerHTML = "দুঃখিত! এই তথ্যটি আমাদের ডাটাবেসে নেই।";
+                    resultBox.style.color = "#721c24";
+                    resultBox.style.backgroundColor = "#f8d7da";
+                    resultBox.style.border = "1px solid #f5c6cb";
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("ডাটাবেস ফাইল (data.json) লোড করা সম্ভব হচ্ছে না। নিশ্চিত করুন ফাইলটি আপলোড করা হয়েছে।");
+            }
+        }
+    </script>
+
+</body>
+</html>
