@@ -1,79 +1,77 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voter Search</title>
-<style>
-  body { font-family: Arial, sans-serif; padding: 20px; }
-  input { padding: 5px; width: 200px; margin-right: 10px; }
-  table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-  th { background-color: #f0f0f0; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>সার্চ ফর্ম - নাম ও জন্ম তারিখ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9;
+        }
+        .search-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="date"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Voter Information Search</h2>
-<input type="text" id="nameInput" placeholder="নাম লিখুন">
-<input type="text" id="dobInput" placeholder="জন্ম তারিখ লিখুন (DD/MM/YYYY)">
-<button onclick="searchData()">Search</button>
-
-<table id="resultsTable">
-  <thead>
-    <tr>
-      <th>ক্রমিক</th>
-      <th>নাম</th>
-      <th>ভোটার নং</th>
-      <th>পিতা</th>
-      <th>মাতা</th>
-      <th>পেশা</th>
-      <th>জন্ম তারিখ</th>
-      <th>ঠিকানা</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-
-<script>
-let data = [];
-
-// Load data.json from GitHub
-fetch('https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/data.json')
-  .then(response => response.json())
-  .then(json => data = json)
-  .catch(err => console.error('Error loading JSON:', err));
-
-function searchData() {
-  const nameQuery = document.getElementById('nameInput').value.toLowerCase();
-  const dobQuery = document.getElementById('dobInput').value;
-
-  const results = data.filter(item => {
-    const nameMatch = item.name.toLowerCase().includes(nameQuery);
-    const dobMatch = dobQuery ? item.dob === dobQuery : true;
-    return nameMatch && dobMatch;
-  });
-
-  const tbody = document.querySelector('#resultsTable tbody');
-  tbody.innerHTML = ''; // Clear previous results
-
-  results.forEach((item, index) => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${item.serial}</td>
-      <td>${item.name}</td>
-      <td>${item.voter_id}</td>
-      <td>${item.father}</td>
-      <td>${item.mother}</td>
-      <td>${item.profession}</td>
-      <td>${item.dob}</td>
-      <td>${item.address}</td>
-    `;
-    tbody.appendChild(row);
-  });
-}
-</script>
+<div class="search-container">
+    <h2>তথ্য খুঁজুন</h2>
+    <form action="/search-result" method="GET">
+        <div class="form-group">
+            <label for="name">নাম:</label>
+            <input type="text" id="name" name="user_name" placeholder="আপনার নাম লিখুন" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="dob">জন্ম তারিখ:</label>
+            <input type="date" id="dob" name="birth_date" required>
+        </div>
+        
+        <button type="submit">সার্চ করুন</button>
+    </form>
+</div>
 
 </body>
 </html>
